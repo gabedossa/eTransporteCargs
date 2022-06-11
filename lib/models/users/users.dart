@@ -4,6 +4,7 @@ class Users {
   late String user_cargo;
   late String user_email;
   late String user_password;
+  //commit teste
 
   Users(this.user_name, this.user_cargo, this.user_email, this.user_password);
 
