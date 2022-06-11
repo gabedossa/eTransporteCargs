@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "616663574960",
+    "project_id": "etransportecarga-6e888",
+    "storage_bucket": "etransportecarga-6e888.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616663574960:android:aa38f62400910a38314e75",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616663574960-h1btceqspvfvrd2tm2591er6cddqu004.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYSu6rQgHhQJNefqajwTRRVXZz3bvK34U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616663574960-h1btceqspvfvrd2tm2591er6cddqu004.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
