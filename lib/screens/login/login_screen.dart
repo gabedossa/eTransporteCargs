@@ -1,3 +1,6 @@
+import 'package:app/models/user/user_local.dart';
+import 'package:app/screens/home/home_screen.dart';
+import 'package:app/screens/signin/user_services.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,6 +11,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _formikey = GlobalKey<FormState>();
+  UserLocal userLocal = UserLocal();
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
@@ -66,69 +71,96 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   // caixa de input de texto;
-                  Padding(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Digite o e-mail',
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
-                          child: TextFormField(
+                  Form(
+                    key: _formikey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            onSaved: (newValue) =>
+                                userLocal.user_email = newValue,
+                            initialValue: userLocal.user_email,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Por favor, insira o e-mal';
+                              }
+                              return null;
+                            },
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: 'Digite a senha.',
+                              hintText: 'Digite o e-mail',
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: const Size(250, 60),
-                                  // Foreground color
-                                  onPrimary: Colors.white,
-                                  // Background color
-                                  primary: Colors.purple.shade700,
-                                ).copyWith(
-                                    elevation:
-                                        ButtonStyleButton.allOrNull(0.0)),
-                                onPressed: () {
-                                  Navigator.of(context).pushNamed('/home_page');
-                                },
-                                child: const Text('Entrar'),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
+                            child: TextFormField(
+                              onSaved: (newValue) =>
+                                  userLocal.user_senha = newValue,
+                              initialValue: userLocal.user_senha,
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Por favor, insira a senha';
+                                }
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Digite a senha.',
                               ),
-                            ],
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(250, 60),
+                            // Foreground color
+                            onPrimary: Colors.white,
+                            // Background color
+                            primary: Colors.purple.shade700,
+                          ).copyWith(
+                              elevation: ButtonStyleButton.allOrNull(0.0)),
+                          onPressed: () {
+                            if (_formikey.currentState!.validate()) {
+                              _formikey.currentState!.save();
+                              UserServices _userServices = UserServices();
+                              _userServices.signIn(userLocal, onSucess: () {
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => const HomeScreen()));
+                              }, onFail: (e){
+                                Text('$e');
+                              });
+                            }
+                          },
+                          child: const Text('Entrar'),
                         ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Não possui conta?',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pushNamed('/signin');
-                                },
-                                child: Text('Cadastre-se',
-                                    style: TextStyle(
-                                        color: Colors.purple.shade700)),
-                              ),
-                            ]),
                       ],
                     ),
-                  )
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    const Text(
+                      'Não possui conta?',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/signin');
+                      },
+                      child: Text('Cadastre-se',
+                          style: TextStyle(color: Colors.purple.shade700)),
+                    ),
+                  ]),
                 ],
               ),
             ),

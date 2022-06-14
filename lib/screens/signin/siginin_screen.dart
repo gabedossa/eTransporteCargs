@@ -1,5 +1,4 @@
-import 'package:app/models/users/users.dart';
-import 'package:app/models/users/users_service.dart';
+import 'package:app/screens/signin/user_services.dart';
 import 'package:flutter/material.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -173,39 +172,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               primary: Colors.purple.shade700,
                             ).copyWith(
                                 elevation: ButtonStyleButton.allOrNull(0.0)),
-                            onPressed: () {
-                              if (_formikey.currentState!.validate()) {
-                                UsersServer usersServices = UsersServer();
-                                Users users = Users(
-                                    user_nameController.text,
-                                    user_cargoController.text,
-                                    user_emailController.text,
-                                    user_passwordController.text);
-                                usersServices.addUser(users);
-                                Navigator.of(context).pop();
-                              }
-                              ;
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: [
-                                  const Text('Cadastrar',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 20,
-                                      )),
-                                  // ignore: prefer_const_constructors
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(8, 5, 0, 0),
-                                    child: const Icon(
-                                        Icons.double_arrow_rounded,
-                                        size: 25,
-                                        color: Colors.white),
-                                  ),
-                                ],
-                              );
-                            },
+                            onPressed: () {},
                             child: const Text('Cadastrar',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w300,
