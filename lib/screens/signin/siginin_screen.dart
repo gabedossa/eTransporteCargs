@@ -1,5 +1,10 @@
+import 'package:app/models/user/user_local.dart';
 import 'package:app/screens/signin/user_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/user/users.dart';
+import '../../models/user/usersDTO_service.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -96,7 +101,8 @@ class _SigninScreenState extends State<SigninScreen> {
                             controller: user_cargoController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: 'Digite o cargo(Entregador, solicitante ou Administrador.).',
+                              hintText:
+                                  'Digite o cargo(Entregador, solicitante ou Administrador.).',
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -172,7 +178,19 @@ class _SigninScreenState extends State<SigninScreen> {
                               primary: Colors.purple.shade700,
                             ).copyWith(
                                 elevation: ButtonStyleButton.allOrNull(0.0)),
-                            onPressed: () {},
+                            onPressed: () {
+                              if (_formikey.currentState!.validate()) {
+                                UsersDTOServices userServices = UsersDTOServices();
+                                Users user = Users(
+                                  user_nameController.text,
+                                  user_cargoController.text,
+                                  user_emailController.text,
+                                  user_passwordController.text,
+                                  user_cofirmController.text,
+                                );
+                                userServices.addUser(user);
+                              }
+                            },
                             child: const Text('Cadastrar',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w300,
