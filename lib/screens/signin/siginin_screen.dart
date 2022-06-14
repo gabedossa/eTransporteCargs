@@ -18,6 +18,8 @@ class _SigninScreenState extends State<SigninScreen> {
   TextEditingController user_emailController = TextEditingController();
   TextEditingController user_passwordController = TextEditingController();
   TextEditingController user_cofirmController = TextEditingController();
+
+  UserLocal user = UserLocal();
   final _formikey = GlobalKey<FormState>();
   var senha;
   @override
@@ -93,6 +95,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               }
                               return null;
                             },
+                            onSaved: (name) => user.user_nome = name,
                           ),
                         ),
                         Padding(
@@ -106,10 +109,13 @@ class _SigninScreenState extends State<SigninScreen> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Peencha o campo nome';
+                                return 'Peencha o campo cargo';
+                              } else if(value != 'entregador' || value != 'solicitante' || value != 'administrador'){
+                                return 'Preencha corretamente.';
                               }
                               return null;
                             },
+                            onSaved: (cargo) => user.user_cargo = cargo,
                           ),
                         ),
                         Padding(
@@ -126,6 +132,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               }
                               return null;
                             },
+                            onSaved: (mail) => user.user_email = mail,
                           ),
                         ),
                         Padding(
@@ -143,6 +150,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               }
                               return null;
                             },
+                            onSaved: (senha) => user.user_senha = senha,
                           ),
                         ),
                         Padding(
@@ -159,6 +167,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               }
                               return null;
                             },
+                            onSaved: (confirm) => user.user_confirmaSenha = confirm,
                           ),
                         ),
                       ],
@@ -180,15 +189,37 @@ class _SigninScreenState extends State<SigninScreen> {
                                 elevation: ButtonStyleButton.allOrNull(0.0)),
                             onPressed: () {
                               if (_formikey.currentState!.validate()) {
-                                UsersDTOServices userServices = UsersDTOServices();
-                                Users user = Users(
-                                  user_nameController.text,
-                                  user_cargoController.text,
-                                  user_emailController.text,
-                                  user_passwordController.text,
-                                  user_cofirmController.text,
+                                _formikey.currentState!.save();
+                                if (user.user_senha != user.user_confirmaSenha) {
+                                  const ScaffoldMessenger(
+                                    child: SnackBar(
+                                      content: Text(
+                                        'Senhas não coincidem!!!',
+                                        style: TextStyle(fontSize: 11),
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                                UserServices userServices = UserServices();
+                                userServices.signUp(
+                                  user,
+                                  onSucess: () {
+                                    Navigator.of(context).pushNamed('/login');
+                                  },
+                                  onFail: (e) {
+                                    ScaffoldMessenger(
+                                      child: SnackBar(
+                                        content: Text(
+                                          'Falha ao registrar usuário: $e',
+                                          style: const TextStyle(fontSize: 11),
+                                        ),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  },
                                 );
-                                userServices.addUser(user);
                               }
                             },
                             child: const Text('Cadastrar',

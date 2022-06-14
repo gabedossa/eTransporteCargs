@@ -24,13 +24,14 @@ class UserServices {
     }
   }
 
-  signUp(UserLocal userLocal) async{
+  Future<void>signUp(UserLocal userLocal, { Function? onSucess, Function? onFail }) async{
     try {
      User? user = (await _auth.createUserWithEmailAndPassword(email: userLocal.user_email!, password: userLocal.user_senha!)).user;
      this.userLocal = userLocal;
      this.userLocal!.user_id = user!.uid;
+     onSucess!();
     } catch (e) {
-      debugPrint(e.toString());
+      onFail!(e);
     }
   }
 }
