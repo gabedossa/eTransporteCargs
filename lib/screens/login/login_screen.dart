@@ -12,6 +12,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formikey = GlobalKey<FormState>();
+  final TextEditingController user_emailController = TextEditingController();
+  final TextEditingController user_passwordController = TextEditingController();
   UserLocal userLocal = UserLocal();
   @override
   Widget build(BuildContext context) {
@@ -78,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           TextFormField(
+                            controller: user_emailController,
                             onSaved: (newValue) =>
                                 userLocal.user_email = newValue,
                             initialValue: userLocal.user_email,
@@ -95,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
                             child: TextFormField(
+                              controller: user_passwordController,
                               onSaved: (newValue) =>
                                   userLocal.user_senha = newValue,
                               initialValue: userLocal.user_senha,
@@ -132,12 +136,21 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (_formikey.currentState!.validate()) {
                               _formikey.currentState!.save();
                               UserServices uuserServices = UserServices();
-                              uuserServices.signIn(userLocal, onSucess: () {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
-                              }, onFail: (e){
-                                Text('$e');
+                              uuserServices.signIn(UserLocal(
+                                user_email: user_emailController.text,
+                                user_senha: user_passwordController.text
+                              ), onSucess: () {
+                                Navigator.of(context).pushNamed('/home_page');
+                              }, onFail: (e) {
+                                ScaffoldMessenger(
+                                  child: SnackBar(
+                                    content: Text(
+                                      'Falha ao entrar: $e',
+                                      style: const TextStyle(fontSize: 10),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
                               });
                             }
                           },
